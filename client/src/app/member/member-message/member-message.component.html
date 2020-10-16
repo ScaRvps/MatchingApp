@@ -1,0 +1,94 @@
+<div *ngIf="messages?.length === 0">
+  No messages yet... say hi by using the message box below
+</div>
+<section class="msger">
+  <ng-container *ngIf="messages?.length !== 0">
+    <div *ngFor="let message of messages">
+      <div class="msg left-msg" *ngIf="message.recipientUserName !== userName">
+        <img
+          src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+          alt="{{ message.senderUserName }}"
+          class="msg-img rounded-circle"
+        />
+
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">
+              <strong>{{ message.senderUserName | titlecase }}</strong>
+            </div>
+          </div>
+
+          <div class="msg-text">
+            {{ message.content }}
+          </div>
+          <div class="msg-info">
+            <div class="msg-info-time">
+              {{ message.dateSent | timeago }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg right-msg" *ngIf="message.recipientUserName === userName">
+        <img
+          src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+          alt="{{ message.senderUserName }}"
+          class="msg-img rounded-circle"
+        />
+
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">
+              <strong>{{ message.senderUserName | titlecase }}</strong>
+            </div>
+          </div>
+
+          <div class="msg-text">
+            {{ message.content }}
+          </div>
+          <div
+            class="msg-info"
+            *ngIf="message.dateRead && message.recipientUserName === userName"
+          >
+            <div class="msg-info-time">
+              {{ message.dateRead | timeago }}
+              <i class="fa fa-check" style="color: #00c441"></i>
+            </div>
+          </div>
+          <div
+            class="msg-info"
+            *ngIf="!message.dateRead && message.recipientUserName === userName"
+          >
+            <div class="msg-info-time">
+              {{ message.dateSent | timeago }}
+              <i class="fa fa-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <form
+    #messageForm="ngForm"
+    class="msger-inputarea mt-4"
+    (ngSubmit)="sendMessage()"
+    autocomplete="off"
+  >
+    <input
+      name="content"
+      [(ngModel)]="content"
+      required
+      type="text"
+      class="form-control msger-input"
+      placeholder="Send a private message..."
+    />
+    <button
+      [disabled]="!messageForm.valid"
+      type="submit"
+      class="msger-send-btn"
+    >
+      <i class="fa fa-paper-plane"></i>
+    </button>
+  </form>
+</section>
