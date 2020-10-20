@@ -1,3 +1,4 @@
+import { PresenceService } from './_services/presence.service';
 import { AccountService } from './_services/account.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private presenceService: PresenceService
   ) { }
 
   ngOnInit() {
@@ -25,6 +27,7 @@ export class AppComponent implements OnInit {
     const user: User = JSON.parse(localStorage.getItem('user'));
     if (user) {
       this.accountService.setCurrentUser(user);
+      this.presenceService.createConnection(user);
     }
   }
 

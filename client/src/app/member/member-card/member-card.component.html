@@ -20,12 +20,27 @@
         </button>
       </li>
       <li class="list-inline-item">
-        <button routerLink='/members/{{ member.userName }}' [queryParams]='{tab: 3}' class="btn btn-primary"><i class="fa fa-envelope"></i></button>
+        <button
+          routerLink="/members/{{ member.userName }}"
+          [queryParams]="{ tab: 3 }"
+          class="btn btn-primary"
+        >
+          <i class="fa fa-envelope"></i>
+        </button>
       </li>
     </ul>
   </div>
   <div class="card-body p-1">
     <h6 class="card-title text-center mb-1">
+      <span
+        [ngClass]="
+          (presenceService.onlineUsers$ | async).includes(member.userName)
+            ? 'online'
+            : 'offline'
+        "
+      >
+        <i class="fa fa-circle online-indicator"></i>
+      </span>
       <i class="fa fa-user mr-2"></i>
       {{ member.nickName }}
     </h6>
