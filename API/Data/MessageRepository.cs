@@ -69,11 +69,17 @@ namespace API.Data
         {
             var query = _context.Messages
                 .OrderByDescending(m => m.DateSent)
+                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
-            var messages = AddMessageParams(query, messageParams);
+            query = messageParams.Container switch
+            {
+                "Inbox" => query.Where(x => x.RecipientUserName == messageParams.UserName && x.RecipientDeleted == false),
+                "Outbox" => query.Where(x => x.SenderUserName == messageParams.UserName && x.SenderDeleted == false),
+                _ => query.Where(x => x.RecipientUserName == messageParams.UserName && x.RecipientDeleted == false && x.DateRead == null)
+            };
 
-            return await PagedList<MessageDto>.CreateAysnc(messages, messageParams.PageNumber, messageParams.PageSize);
+            return await PagedList<MessageDto>.CreateAysnc(query, messageParams.PageNumber, messageParams.PageSize);
         }
 
         //Paginated
@@ -105,6 +111,7 @@ namespace API.Data
                    && m.Sender.UserName == recipientUserName && m.RecipientDeleted == false
                 )
                 .OrderBy(x => x.DateSent)
+                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             var unreadMessages = messages.Where(m => m.RecipientUserName == senderUserName && m.DateRead == null && m.RecipientDeleted == false).ToList();
@@ -115,10 +122,9 @@ namespace API.Data
                 {
                     message.DateRead = DateTime.UtcNow;
                 }
-                await _context.SaveChangesAsync();
             }
 
-            return _mapper.Map<IEnumerable<MessageDto>>(messages);
+            return messages;
         }
 
         public void RemoveConnection(Connection connection)
@@ -126,21 +132,5 @@ namespace API.Data
             _context.Connections.Remove(connection);
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        private IQueryable<MessageDto> AddMessageParams(IQueryable<Message> query, MessageParams messageParams)
-        {
-            query = messageParams.Container switch
-            {
-                "Inbox" => query.Where(x => x.RecipientUserName == messageParams.UserName && x.RecipientDeleted == false),
-                "Outbox" => query.Where(x => x.SenderUserName == messageParams.UserName && x.SenderDeleted == false),
-                _ => query.Where(x => x.RecipientUserName == messageParams.UserName && x.RecipientDeleted == false && x.DateRead == null)
-            };
-
-            return query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
-        }
     }
 }

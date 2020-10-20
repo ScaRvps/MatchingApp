@@ -2,72 +2,92 @@
   No messages yet... say hi by using the message box below
 </div>
 <section class="msger">
-  <ng-container *ngIf="(messageService.messageThread$ | async).length !== 0">
-    <div *ngFor="let message of messageService.messageThread$ | async">
-      <div class="msg left-msg" *ngIf="message.recipientUserName !== userName">
-        <img
-          src="{{ message.senderPhotoUrl || './assets/user.png' }}"
-          alt="{{ message.senderUserName }}"
-          class="msg-img rounded-circle"
-        />
+  <main
+    #scrollMe
+    [scrollTop]="(scrollMe.scrollHeight - scrollMe.clientHeight)"
+    class="msger-chat"
+  >
+    <div class="sub">
+      <ng-container
+        *ngIf="(messageService.messageThread$ | async).length !== 0"
+      >
+        <div *ngFor="let message of messageService.messageThread$ | async">
+          <div
+            class="msg left-msg"
+            *ngIf="message.recipientUserName !== userName"
+          >
+            <img
+              src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+              alt="{{ message.senderUserName }}"
+              class="msg-img rounded-circle"
+            />
 
-        <div class="msg-bubble">
-          <div class="msg-info">
-            <div class="msg-info-name">
-              <strong>{{ message.senderUserName | titlecase }}</strong>
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">
+                  <strong>{{ message.senderUserName | titlecase }}</strong>
+                </div>
+              </div>
+
+              <div class="msg-text">
+                {{ message.content }}
+              </div>
+              <div class="msg-info">
+                <div class="msg-info-time">
+                  {{ message.dateSent | timeago }}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="msg-text">
-            {{ message.content }}
-          </div>
-          <div class="msg-info">
-            <div class="msg-info-time">
-              {{ message.dateSent | timeago }}
+          <div
+            class="msg right-msg"
+            *ngIf="message.recipientUserName === userName"
+          >
+            <img
+              src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+              alt="{{ message.senderUserName }}"
+              class="msg-img rounded-circle"
+            />
+
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">
+                  <strong>{{ message.senderUserName | titlecase }}</strong>
+                </div>
+              </div>
+
+              <div class="msg-text">
+                {{ message.content }}
+              </div>
+              <div
+                class="msg-info"
+                *ngIf="
+                  message.dateRead && message.recipientUserName === userName
+                "
+              >
+                <div class="msg-info-time">
+                  {{ message.dateRead | timeago }}
+                  <i class="fa fa-check" style="color: #00c441"></i>
+                </div>
+              </div>
+              <div
+                class="msg-info"
+                *ngIf="
+                  !message.dateRead && message.recipientUserName === userName
+                "
+              >
+                <div class="msg-info-time">
+                  {{ message.dateSent | timeago }}
+                  <i class="fa fa-check"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="msg right-msg" *ngIf="message.recipientUserName === userName">
-        <img
-          src="{{ message.senderPhotoUrl || './assets/user.png' }}"
-          alt="{{ message.senderUserName }}"
-          class="msg-img rounded-circle"
-        />
-
-        <div class="msg-bubble">
-          <div class="msg-info">
-            <div class="msg-info-name">
-              <strong>{{ message.senderUserName | titlecase }}</strong>
-            </div>
-          </div>
-
-          <div class="msg-text">
-            {{ message.content }}
-          </div>
-          <div
-            class="msg-info"
-            *ngIf="message.dateRead && message.recipientUserName === userName"
-          >
-            <div class="msg-info-time">
-              {{ message.dateRead | timeago }}
-              <i class="fa fa-check" style="color: #00c441"></i>
-            </div>
-          </div>
-          <div
-            class="msg-info"
-            *ngIf="!message.dateRead && message.recipientUserName === userName"
-          >
-            <div class="msg-info-time">
-              {{ message.dateSent | timeago }}
-              <i class="fa fa-check"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ng-container>
     </div>
-  </ng-container>
+  </main>
 
   <form
     #messageForm="ngForm"

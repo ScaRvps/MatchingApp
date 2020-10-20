@@ -24,8 +24,15 @@
 .msger-chat {
   flex: 1;
   overflow-y: auto;
+  height: 500px;
   padding: 10px;
+  // transform: rotateX(180deg);
+  // -webkit-transform: rotateX(180deg); /* Safari and Chrome */
 }
+// .sub {
+//   transform: rotateX(180deg);
+//   -webkit-transform: rotateX(180deg); /* Safari and Chrome */
+// }
 .msger-chat::-webkit-scrollbar {
   width: 6px;
 }
@@ -35,6 +42,7 @@
 .msger-chat::-webkit-scrollbar-thumb {
   background: #bdbdbd;
 }
+
 .msg {
   display: flex;
   align-items: flex-end;
