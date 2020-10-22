@@ -27,7 +27,7 @@ namespace API.Interfaces
         Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams);
 
         // Task<PagedList<MessageDto>> GetMessageThread(string senderUserName, string recipientUserName, MessageParams messageParams);
-        Task<IEnumerable<MessageDto>> GetMessageThread(string senderUserName, string recipientUserName);
+        Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUserName);
 
     }
 }

@@ -19,6 +19,7 @@ export class MemberMessageComponent implements OnInit {
   @Input() messages: Message[];
   @Input() userName: string;
   content: string;
+  loading = false;
 
   constructor(public messageService: MessageService) { }
 
@@ -26,21 +27,17 @@ export class MemberMessageComponent implements OnInit {
     this.scrollToBottom();
   }
 
-  // ngAfterViewChecked() {
-  //   this.scrollToBottom();
-  // }
-
   sendMessage() {
+    this.loading = true;
     this.messageService.sendMessage(this.userName, this.content).then(() => {
       this.messageForm.reset();
-    })
+    }).finally(() => this.loading = false);
   }
 
   scrollToBottom(): void {
-    try {
-      console.log(this.scrollContainer.nativeElement.scrollHeight);
+    if (this.scrollContainer) {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight - this.scrollContainer.nativeElement.clientHeight;
-    } catch (err) { }
+    }
   }
 
 }

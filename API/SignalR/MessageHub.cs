@@ -30,7 +30,6 @@ namespace API.SignalR
             var otherUser = httpContext.Request.Query["user"].ToString();
             var callerUser = Context.User.GetUserName();
             var groupName = GetGroupName(callerUser, otherUser);
-
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             var group = await AddToGroup(groupName);
 
@@ -74,7 +73,7 @@ namespace API.SignalR
 
             var group = await _unitOfWork.MessageRepository.GetMessageGroup(groupName);
 
-            if (group.Connections.Any(x => x.userName == recipient.UserName))
+            if (group.Connections.Any(x => x.UserName == recipient.UserName))
             {
                 message.DateRead = DateTime.UtcNow;
             }

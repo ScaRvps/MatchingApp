@@ -9,11 +9,11 @@ namespace API.Entities
         public Connection(string connectionId, string userName)
         {
             ConnectionId = connectionId;
-            this.userName = userName;
+            UserName = userName;
         }
 
         public string ConnectionId { get; set; }
-        public string userName { get; set; }
+        public string UserName { get; set; }
 
     }
 }

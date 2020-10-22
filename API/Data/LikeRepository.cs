@@ -49,7 +49,7 @@ namespace API.Data
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url
             });
 
-            return await PagedList<LikeDto>.CreateAysnc(likedUsers, likesParams.PageNumber, likesParams.PageSize);
+            return await PagedList<LikeDto>.CreateAsync(likedUsers, likesParams.PageNumber, likesParams.PageSize);
         }
 
         public async Task<AppUser> GetUserWithLikes(int userId)

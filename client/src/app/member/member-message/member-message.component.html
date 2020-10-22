@@ -4,7 +4,7 @@
 <section class="msger">
   <main
     #scrollMe
-    [scrollTop]="(scrollMe.scrollHeight - scrollMe.clientHeight)"
+    [scrollTop]="scrollMe.scrollHeight - scrollMe.clientHeight"
     class="msger-chat"
   >
     <div class="sub">
@@ -104,11 +104,12 @@
       placeholder="Send a private message..."
     />
     <button
-      [disabled]="!messageForm.valid"
+      [disabled]="!messageForm.valid || loading"
       type="submit"
       class="msger-send-btn"
     >
-      <i class="fa fa-paper-plane"></i>
+      <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
+      <i *ngIf="!loading" class="fa fa-paper-plane"></i>
     </button>
   </form>
 </section>
